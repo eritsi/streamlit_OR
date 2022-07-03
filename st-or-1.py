@@ -8,8 +8,8 @@ from PIL import Image
 
 st.header("最短経路問題")
 st.markdown("""
-あるネットワークにおいて、各点と隣接する点同士の移動距離が分かっている。
-この時ある始点から終点までの距離が最短になるルートを求めたい。どのように移動経路を設定すれば良いだろうか？
+あるネットワークにおいて、各点と隣接する点同士の移動距離が分かっているとします。
+この時ある始点から終点までの距離が最短になるルートを求めたい場合、どのように移動経路を設定すれば良いでしょうか？
 """)
 
 # +
@@ -57,13 +57,25 @@ if st.button('最短経路を表示'):
     st.write(nx.dijkstra_path(G, 'S', 'T'))
     st.write("経路の合計時間:　{}".format(nx.dijkstra_path_length(G, 'S', 'T')))
 
-st.header("最長経路問題")
+st.header("全経路を表示")
 st.markdown("""
-最長経路（一筆書きで）も同様に求めてみましょう。""")
+全経路を表示して最短経路が正しかったかを確かめてみましょう。また、最長経路も探してみましょう。""")
 
-if st.button('最長経路を表示'):
+if st.button('全経路を表示'):
 #     st.write(nx.single_source_bellman_ford(G,'S', 'T'))
-    st.write('work in progress...')
+    # 全経路と長さ
+    for path in nx.all_simple_paths(G, 'S', 'T'):
+        st.write('path: {} length:{}'.format(path, nx.path_weight(G, path, weight="weight")))
 
 st.header("解答")
 st.image(Image.open('img/or-network.png'))
+
+st.header("巡回セールスマン問題")
+st.markdown("""
+始点と終点を定めず、最短となる一筆書き経路を求めてみましょう。""")
+
+if st.button('最短一筆書き経路を表示'):
+#     st.write(nx.single_source_bellman_ford(G,'S', 'T'))
+    # 始点・終点を定めない巡回セールスマン問題
+    tsp = nx.approximation.traveling_salesman_problem
+    st.write(tsp(G, weight='weight', cycle=False))
